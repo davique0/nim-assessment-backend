@@ -82,6 +82,24 @@ const getByStatus = async (status) => {
   return orders;
 };
 
+const getTotalSales = async () => {
+  const totalSales = await Order.find().populate("items.item");
+  const total = { total: 0 };
+  let accumulator = 0;
+
+  const sales = totalSales.map((sale) => {
+    sale.items.map((x) => {
+      accumulator += x.item.price * x.quantity;
+      return accumulator;
+    });
+    return accumulator;
+  });
+
+  total.total = sales[sales.length - 1];
+
+  return total;
+};
+
 module.exports = {
   getAll,
   getOne,
@@ -89,5 +107,6 @@ module.exports = {
   update,
   remove,
   getByStatus,
-  Order
+  Order,
+  getTotalSales
 };
