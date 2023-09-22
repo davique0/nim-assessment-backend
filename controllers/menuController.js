@@ -45,4 +45,13 @@ const deleteOne = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, create, update, deleteOne };
+const searchMany = async (req, res) => {
+  try {
+    const menu = await MenuItems.searchMany(req.query.q);
+    res.send(menu);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+module.exports = { getAll, getOne, create, update, deleteOne, searchMany };

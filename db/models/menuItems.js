@@ -73,4 +73,26 @@ const deleteOne = async (id) => {
   }
 };
 
-module.exports = { getAll, getOne, create, MenuItems, update, deleteOne };
+const searchMany = async (query) => {
+  try {
+    const menuItems = await MenuItems.find({
+      $or: [
+        { description: { $regex: query, $options: "i" } },
+        { name: { $regex: query, $options: "i" } }
+      ]
+    });
+    return menuItems;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports = {
+  getAll,
+  getOne,
+  create,
+  MenuItems,
+  update,
+  deleteOne,
+  searchMany
+};
