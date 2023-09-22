@@ -84,20 +84,16 @@ const getByStatus = async (status) => {
 
 const getTotalSales = async () => {
   const totalSales = await Order.find().populate("items.item");
-  const total = { total: 0 };
   let accumulator = 0;
 
-  const sales = totalSales.map((sale) => {
-    sale.items.map((x) => {
-      accumulator += x.item.price * x.quantity;
-      return accumulator;
-    });
-    return accumulator;
+  totalSales.forEach((sale) => {
+    const totalSale = sale.items.reduce(
+      (total, item) => total + item.item.price * item.quantity,
+      0
+    );
+    accumulator += totalSale;
   });
-
-  total.total = sales[sales.length - 1];
-
-  return total;
+  return { total: accumulator };
 };
 
 module.exports = {
